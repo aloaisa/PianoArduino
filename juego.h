@@ -60,24 +60,30 @@ void juegoGanado() {
 
 }
 
-void juego_inicarJuego() {
+boolean juego_inicarJuego() {
     Serial.println("juego_inicarJuego");
 
+    boolean resultWin = false;
     int posicionAChequear = 0;
     boolean juegoActivo = true;
+
+    // La 1º vez esperamos también 7 segundos para fallar?
+    iniciarContadorAbandono();
+
     while (juegoActivo) {
 
         int teclaPulsada = obtenerTeclaPulsada();
-        if (teclaPulsada != null) {
-            // Tecla normal pulsada
+        if (teclaPulsada != 0) {
+            Serial.println("Tecla válida pulsada: " + teclaPulsada);
 
-            if (siguienteTeclaValida(teclaPulsada)) {
+            if (siguienteTeclaValida(teclaPulsada, posicionAChequear)) {
                 pulsadoTeclaValida(teclaPulsada);
                 posicionAChequear++;
                 
-                if (posicionAChequear == NOTAS_VALIDAS.length()) {
+                if (posicionAChequear == (sizeof(NOTAS_VALIDAS) / sizeof(int))) {
                     juegoGanado();
                     juegoActivo = false;
+                    resultWin = true;
                 }
 
             } else {
@@ -92,4 +98,5 @@ void juego_inicarJuego() {
     }
 
     Serial.println("El juego ha finalizado");
+    return resultWin;
 }

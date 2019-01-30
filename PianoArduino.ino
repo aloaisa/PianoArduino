@@ -4,6 +4,7 @@
 #include "juego.h"
 
 boolean juegoActivo;
+boolean juegoPerdido;
 
 void setup() {
   Serial.println("Init nano...");
@@ -19,6 +20,18 @@ void setup() {
 
   // juegoActivo = false;
   juegoActivo = true;
+  juegoPerdido = false;
+}
+
+void esperarParaVolverAJugar() {
+  unsigned long contadorTiempo = millis() + TIEMPO_DE_ESPERA;
+  boolean pararJuego = true;
+
+  while(pararJuego) {
+    if (chequearTeclas() != 0 || contadorTiempo < millis()) {
+      pararJuego = false;
+    }
+  }
 }
 
 void loop() {
@@ -30,11 +43,22 @@ void loop() {
   } else {
     // Juego inicializado
 
-    velas_EncendidoVelas();
-    juego_inicarJuego();
+    // Controlamos que si pierden se vuelva a activar el juego a los 30s
+    // o cuando toquen cualquier tecla.
+    while(!juegoPerdido) {
 
-    // Se terminó la partida
-    juegoActivo = false;
+      velas_EncendidoVelas();
+
+      if (juego_inicarJuego()) {
+        // Se ha ganado el juego
+        juegoActivo = false;
+        juegoPerdido = false;
+        
+      } else {
+        // Se ha perdido el juego
+        esperarParaVolverAJugar();
+      }
+    }
   }
 
 }
