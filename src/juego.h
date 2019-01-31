@@ -2,8 +2,44 @@ unsigned long contadorTiempoAbandono;
 
 int chequearTeclas() {
     Serial.println("chequearTeclas");
-    // Leer el pulsador de teclas a ver cual se ha pulsado de todas
     
+    // Leer el pulsador de teclas a ver cual se ha pulsado de todas
+    int nota1 = digitalRead(PIN_NOTA_1);
+    int nota2 = digitalRead(PIN_NOTA_2);
+    int nota3 = digitalRead(PIN_NOTA_3);
+    int nota4 = digitalRead(PIN_NOTA_4);
+    int nota5 = digitalRead(PIN_NOTA_5);
+    int nota6 = digitalRead(PIN_NOTA_6);
+    int nota7 = digitalRead(PIN_NOTA_7);
+    int nota8 = digitalRead(PIN_NOTA_8);
+    int nota9 = digitalRead(PIN_NOTA_9);
+    int nota10 = digitalRead(PIN_NOTA_10);
+    int nota11 = digitalRead(PIN_NOTA_11);
+
+    if (nota1 == HIGH) {
+        return 1;
+    } else if (nota2 == HIGH) {
+        return 2;
+    } else if (nota3 == HIGH) {
+        return 3;
+    } else if (nota4 == HIGH) {
+        return 4;
+    } else if (nota5 == HIGH) {
+        return 5;
+    } else if (nota6 == HIGH) {
+        return 6;
+    } else if (nota7 == HIGH) {
+        return 7;
+    } else if (nota8 == HIGH) {
+        return 8;
+    } else if (nota9 == HIGH) {
+        return 9;
+    } else if (nota10 == HIGH) {
+        return 10;
+    } else if (nota11 == HIGH) {
+        return 11;
+    }
+
     return 0; // 0 es el valor en el caso de que no devolvamos nada
 }
 
@@ -20,7 +56,7 @@ int obtenerTeclaPulsada() {
         }
 
         if (contadorTiempoAbandono < millis()) {
-            // Sonido feo
+            sonido_playSonidoError();
             velas_falloEfectoVelas();
             waiting = false;
         }
@@ -41,7 +77,8 @@ void iniciarContadorAbandono() {
 
 void pulsadoTeclaValida(int teclaPulsada) {
     Serial.println("pulsadoTeclaValida");
-    // Suena nota
+
+    sonido_playNota(teclaPulsada);
     velas_aciertoEfectoVelas();
     iniciarContadorAbandono();
 }
@@ -49,15 +86,15 @@ void pulsadoTeclaValida(int teclaPulsada) {
 void pulsadoTeclaNoValida(int teclaPulsada) {
     Serial.println("pulsadoTeclaNoValida");
     
-    // Suena nota
+    sonido_playNota(teclaPulsada);
     delay(1000);
-    // Sonido feo
+    sonido_playSonidoError();
     velas_falloEfectoVelas();
 }
 
 void juegoGanado() {
     Serial.println("JuegoGanado");
-
+    sonido_sonidoGanar();
 }
 
 boolean juego_inicarJuego() {

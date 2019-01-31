@@ -19,3 +19,10 @@ const int PIN_NOTA_10 = 10;
 const int PIN_NOTA_11 = 11;
 
 const int PIN_VELAS = 12;
+
+const int PIN_INICIO = 13;
+
+const int SOUND_RX_PIN = 14;
+const int SOUND_TX_PIN = 15;
+
+const int SOUND_VOLUME = 30;

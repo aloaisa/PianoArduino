@@ -1,7 +1,10 @@
 #include "Arduino.h"
-#include "configuration.h"
-#include "velas.h"
-#include "juego.h"
+#include "DFRobotDFPlayerMini.h"
+#include "SoftwareSerial.h"
+#include "src/configuration.h"
+#include "src/sonido.h"
+#include "src/velas.h"
+#include "src/juego.h"
 
 boolean juegoActivo;
 boolean juegoPerdido;
@@ -28,16 +31,17 @@ void setup() {
   pinMode(PIN_NOTA_11, INPUT_PULLUP);
 
   pinMode(PIN_VELAS, OUTPUT);
+  pinMode(PIN_INICIO, INPUT_PULLUP);
+
   velas_ApagadoVelas();
+  sonido_inicializarSonido();
 
-  // Configuramos el sonido
-
-  // juegoActivo = false;
-  juegoActivo = true;
+  juegoActivo = false;
   juegoPerdido = false;
 }
 
 void esperarParaVolverAJugar() {
+  Serial.println("esperarParaVolverAJugar");
   unsigned long contadorTiempo = millis() + TIEMPO_DE_ESPERA;
   boolean pararJuego = true;
 
@@ -48,11 +52,24 @@ void esperarParaVolverAJugar() {
   }
 }
 
+void esperaSignalInicioJuego() {
+  Serial.println("esperaSignalInicioJuego");
+
+  boolean signalInicio = false;  
+  while(!signalInicio) {
+    int activateSignal = digitalRead(PIN_INICIO);
+    if (activateSignal == HIGH) {
+      signalInicio = true;
+    }
+  }
+
+  juegoActivo = true;
+}    
+
 void loop() {
 
   if (!juegoActivo) {
-    // Esperando a inicializar el juego
-    // Que hay que chequear? para cambiar juegoActivo a true?
+    esperaSignalInicioJuego();
 
   } else {
     // Juego inicializado
