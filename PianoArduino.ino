@@ -13,8 +13,22 @@ void setup() {
   Serial.println("initialize Pins...");
 
   // 11 notas
-  // pinMode(EYES_LED_PIN, OUTPUT);
-  // pinMode(ON_PIN, INPUT_PULLUP);
+  pinMode(PIN_NOTA_1, INPUT_PULLUP);
+  pinMode(PIN_NOTA_2, INPUT_PULLUP);
+  pinMode(PIN_NOTA_3, INPUT_PULLUP);
+  pinMode(PIN_NOTA_4, INPUT_PULLUP);
+  pinMode(PIN_NOTA_5, INPUT_PULLUP);
+
+  pinMode(PIN_NOTA_6, INPUT_PULLUP);
+  pinMode(PIN_NOTA_7, INPUT_PULLUP);
+  pinMode(PIN_NOTA_8, INPUT_PULLUP);
+  pinMode(PIN_NOTA_9, INPUT_PULLUP);
+  pinMode(PIN_NOTA_10, INPUT_PULLUP);
+
+  pinMode(PIN_NOTA_11, INPUT_PULLUP);
+
+  pinMode(PIN_VELAS, OUTPUT);
+  velas_ApagadoVelas();
 
   // Configuramos el sonido
 
