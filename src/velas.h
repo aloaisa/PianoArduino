@@ -10,6 +10,19 @@ void velas_ApagadoVelas() {
 
 void velas_aciertoEfectoVelas() {
     Serial.println("velas_aciertoEfectoVelas");
+
+    digitalWrite(PIN_VELAS, LOW);
+    delay(250);
+    digitalWrite(PIN_VELAS, HIGH);
+    delay(250);
+    digitalWrite(PIN_VELAS, LOW);
+    delay(250);
+    digitalWrite(PIN_VELAS, HIGH);
+    delay(250);
+    digitalWrite(PIN_VELAS, LOW);
+    delay(250);
+    digitalWrite(PIN_VELAS, HIGH);
+    delay(250);
     digitalWrite(PIN_VELAS, LOW);
     delay(250);
     digitalWrite(PIN_VELAS, HIGH);
@@ -22,8 +35,8 @@ void velas_aciertoEfectoVelas() {
 void velas_falloEfectoVelas() {
     Serial.println("velas_falloEfectoVelas");
     digitalWrite(PIN_VELAS, LOW);
-    delay(250);
+    delay(500);
     digitalWrite(PIN_VELAS, HIGH);
-    delay(250);
+    delay(1500);
     digitalWrite(PIN_VELAS, LOW);
 }
