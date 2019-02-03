@@ -1,8 +1,7 @@
 unsigned long contadorTiempoAbandono;
+boolean primeraNota = true;
 
 int juego_chequearTeclas() {
-    Serial.println("juego_chequearTeclas");
-    
     // Leer el pulsador de teclas a ver cual se ha pulsado de todas
     int nota1 = digitalRead(PIN_NOTA_1);
     int nota2 = digitalRead(PIN_NOTA_2);
@@ -16,51 +15,54 @@ int juego_chequearTeclas() {
     int nota10 = digitalRead(PIN_NOTA_10);
     int nota11 = digitalRead(PIN_NOTA_11);
 
-    if (nota1 == HIGH) {
-        return 1;
-    } else if (nota2 == HIGH) {
+    // if (nota1 == HIGH) {
+    //     return 1;
+    // } else
+    if (nota2 == HIGH) {
         return 2;
-    } else if (nota3 == HIGH) {
-        return 3;
-    } else if (nota4 == HIGH) {
-        return 4;
-    } else if (nota5 == HIGH) {
-        return 5;
-    } else if (nota6 == HIGH) {
-        return 6;
-    } else if (nota7 == HIGH) {
-        return 7;
-    } else if (nota8 == HIGH) {
-        return 8;
-    } else if (nota9 == HIGH) {
-        return 9;
-    } else if (nota10 == HIGH) {
-        return 10;
-    } else if (nota11 == HIGH) {
-        return 11;
+    // } else if (nota3 == HIGH) {
+    //     return 3;
+    // } else if (nota4 == HIGH) {
+    //     return 4;
+    // } else if (nota5 == HIGH) {
+    //     return 5;
+    // } else if (nota6 == HIGH) {
+    //     return 6;
+    // } else if (nota7 == HIGH) {
+    //     return 7;
+    // } else if (nota8 == HIGH) {
+    //     return 8;
+    // } else if (nota9 == HIGH) {
+    //     return 9;
+    // } else if (nota10 == HIGH) {
+    //     return 10;
+    // } else if (nota11 == HIGH) {
+    //     return 11;
     }
 
     return 0; // 0 es el valor en el caso de que no devolvamos nada
 }
 
 int obtenerTeclaPulsada() {
-    Serial.println("obtenerTeclaPulsada");
+    Serial.println("obtenerTeclaPulsada:");
 
-    int teclaPulsada;
+    int teclaPulsada = 0;
     boolean waiting = true;
 
     while(waiting) {
-        teclaPulsada = juego_chequearTeclas();
-        if (teclaPulsada != 0) {
-            waiting = false;
-        }
-
-        if (contadorTiempoAbandono < millis()) {
+        if ((contadorTiempoAbandono < millis()) && !primeraNota)  {
             sonido_playSonidoError();
             velas_falloEfectoVelas();
             delay(2000);
             waiting = false;
         }
+
+        teclaPulsada = juego_chequearTeclas();
+        if (teclaPulsada != 0) {
+            waiting = false;
+            primeraNota = false;
+        }
+
     }
 
     return teclaPulsada;
@@ -77,9 +79,7 @@ void iniciarContadorAbandono() {
 }
 
 void pulsadoTeclaValida(int teclaPulsada) {
-    Serial.println("//////////////////////////////////////");
     Serial.println("////////// Tecla Valida //////////////");
-    Serial.println("//////////////////////////////////////");
 
     sonido_playNota(teclaPulsada);
     velas_aciertoEfectoVelas();
@@ -87,9 +87,7 @@ void pulsadoTeclaValida(int teclaPulsada) {
 }
 
 void pulsadoTeclaNoValida(int teclaPulsada) {
-    Serial.println("//////////////////////////////////////");
     Serial.println("/////// Tecla NO Valida //////////////");
-    Serial.println("//////////////////////////////////////");
     
     sonido_playNota(teclaPulsada);
     delay(2000);
@@ -99,13 +97,21 @@ void pulsadoTeclaNoValida(int teclaPulsada) {
     
 }
 
+void signalAperturaDePuerta() {
+    Serial.println("signalAperturaDePuerta");
+    digitalWrite(PIN_FIN_APERTURA_DE_PUERTA, HIGH);
+}
+
 void juegoGanado() {
-    Serial.println("JuegoGanado");
+    Serial.println("///////// JuegoGanado ////////////////");
+
     sonido_sonidoGanar();
     velas_aciertoEfectoVelas();
     velas_aciertoEfectoVelas();
     velas_aciertoEfectoVelas();
     delay(2000);
+
+    signalAperturaDePuerta();
 }
 
 boolean juego_inicarJuego() {
@@ -114,16 +120,15 @@ boolean juego_inicarJuego() {
     boolean resultWin = false;
     int posicionAChequear = 0;
     boolean juegoActivo = true;
-
-    // La 1º vez esperamos también 7 segundos para fallar?
-    iniciarContadorAbandono();
+    primeraNota = true;
 
     while (juegoActivo) {
 
         int teclaPulsada = obtenerTeclaPulsada();
+        Serial.print("Tecla pulsada: ");
+        Serial.println(teclaPulsada);
+
         if (teclaPulsada != 0) {
-            Serial.print("Tecla pulsada: ");
-            Serial.println(teclaPulsada);
 
             if (siguienteTeclaValida(teclaPulsada, posicionAChequear)) {
                 pulsadoTeclaValida(teclaPulsada);

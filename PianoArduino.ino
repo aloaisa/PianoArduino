@@ -6,9 +6,6 @@
 #include "src/velas.h"
 #include "src/juego.h"
 
-boolean juegoActivo;
-boolean juegoPerdido;
-
 void setup() {
   Serial.begin(BAUDS);
   Serial.println("initialize Pins...");
@@ -27,26 +24,10 @@ void setup() {
   pinMode(PIN_NOTA_11, INPUT_PULLUP);
 
   pinMode(PIN_VELAS, OUTPUT);
-  pinMode(PIN_INICIO, INPUT_PULLUP);
+  pinMode(PIN_FIN_APERTURA_DE_PUERTA, OUTPUT);
 
   velas_ApagadoVelas();
   sonido_inicializarSonido();
-
-  // juegoActivo = false;
-  juegoActivo = true;
-  juegoPerdido = false;
-}
-
-void esperarParaVolverAJugar() {
-  Serial.println("esperarParaVolverAJugar");
-  unsigned long contadorTiempo = millis() + TIEMPO_DE_ESPERA;
-  boolean pararJuego = true;
-
-  while(pararJuego) {
-    if (juego_chequearTeclas() != 0 || contadorTiempo < millis()) {
-      pararJuego = false;
-    }
-  }
 }
 
 void probarSonidos() {
@@ -116,68 +97,32 @@ void probarSonidos() {
   // Serial.println("22");
   // sonido_playNota(22);
   // delay(5000);
-
-  Serial.println("23");
-  sonido_playNota(23);
-  delay(5000);
+  // Serial.println("23");
+  // sonido_playNota(23);
+  // delay(5000);
   // Serial.println("24");
   // sonido_playNota(24);
   // delay(5000);
-  Serial.println("25");
-  sonido_playNota(25);
-  delay(5000);
+  // Serial.println("25");
+  // sonido_playNota(25);
+  // delay(5000);
   // Serial.println("26");
   // sonido_playNota(26);
   // delay(5000);
 }
 
-void esperaSignalInicioJuego() {
-  Serial.println("esperaSignalInicioJuego");
-
-  boolean signalInicio = false;  
-  while(!signalInicio) {
-    int activateSignal = digitalRead(PIN_INICIO);
-    if (activateSignal == HIGH) {
-      signalInicio = true;
-    }
-  }
-
-  juegoActivo = true;
-}    
-
 void loop() {
   // probarSonidos();
   
-  if (!juegoActivo) {
-    esperaSignalInicioJuego();
+  // Juego inicializado
+  Serial.println("//////////////////////////////////////");
+  Serial.println("/////////// INICIO JUEGO /////////////");
+  Serial.println("//////////////////////////////////////");
 
-  } else {
-    // Juego inicializado
-    Serial.println("//////////////////////////////////////");
-    Serial.println("//////////////////////////////////////");
-    Serial.println("/////////// INICIO JUEGO /////////////");
-    Serial.println("//////////////////////////////////////");
-    Serial.println("//////////////////////////////////////");
+  boolean juegoGanado = juego_inicarJuego();
+  Serial.print("juegoGanado: ");
+  Serial.println(juegoGanado);
 
-    // Controlamos que si pierden se vuelva a activar el juego a los 30s
-    // o cuando toquen cualquier tecla.
-    while(!juegoPerdido) {
-
-      velas_EncendidoVelas();
-
-      if (juego_inicarJuego()) {
-        // Se ha ganado el juego
-        juegoActivo = false;
-        juegoPerdido = false;
-        
-      } else {
-        // Se ha perdido el juego
-        esperarParaVolverAJugar();
-        Serial.println("//////////////////////////////////////");
-        Serial.println("//////// Volvemos a Jugar ////////////");
-        Serial.println("//////////////////////////////////////");
-      }
-    }
-  }
-
+  // Se ha ganado el juego
+  velas_ApagadoVelas();
 }
