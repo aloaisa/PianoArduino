@@ -1,9 +1,9 @@
 const int BAUDS = 9600;
 
-const int NOTAS_VALIDAS[] = {1, 2, 3, 4, 1};
+const int NOTAS_VALIDAS[] = {1, 2, 3, 1, 2};
 unsigned long TIEMPO_DE_ABANDONO = 7000;
 
-const int PIN_NOTA_1 = 1;
+const int PIN_NOTA_1 = A5;
 const int PIN_NOTA_2 = 2;
 const int PIN_NOTA_3 = 3;
 const int PIN_NOTA_4 = 4;

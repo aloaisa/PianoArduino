@@ -15,13 +15,13 @@ int juego_chequearTeclas() {
     int nota10 = digitalRead(PIN_NOTA_10);
     int nota11 = digitalRead(PIN_NOTA_11);
 
-    // if (nota1 == HIGH) {
-    //     return 1;
-    // } else
+    if (nota1 == HIGH) {
+        return 1;
+    } else
     if (nota2 == HIGH) {
         return 2;
-    // } else if (nota3 == HIGH) {
-    //     return 3;
+    } else if (nota3 == HIGH) {
+        return 3;
     // } else if (nota4 == HIGH) {
     //     return 4;
     // } else if (nota5 == HIGH) {
